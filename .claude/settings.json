@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__vidIQ__.*|mcp__.*[Hh]iggsfield.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR\"/.claude/hooks/mcp_credit_guard.py"
+          }
+        ]
+      }
+    ]
+  }
+}
