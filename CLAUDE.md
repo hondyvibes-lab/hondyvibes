@@ -49,3 +49,13 @@
    背景:2026-09-03のインシデントで、vidIQ・Higgsfieldがどちらもクレジット切れで
    使用不能になった際、ユーザーは既に「第二の脳」プロジェクトでnlm経由の
    NotebookLM分析を同じ動画に対して実行できていたが、この選択肢を提案できなかった。
+
+## インシデント追記:2026-10-24 `vidiq_youtube_search` の出力スキーマエラー
+
+- 呼び出し:`vidiq_youtube_search`(query「ツボぐりぐり君」, type=video, order=viewCount, limit=50, regionCode=JP)
+- 結果:`Structured content does not match the tool's output schema: data/results/5/publishedAt ...` で失敗。
+  vidIQ側は結果を返しているが、6件目の`publishedAt`の形式が不正で、MCPクライアント側の検証で弾かれた。
+- **失敗したのに5クレジット消費された**(残高 108 → 103)。`vidiq_youtube_search`も失敗時に返金されない。
+- 原因は返ってくるデータ側にあり、同じ引数で再実行しても同じ結果になる可能性が高いため、再試行はしていない。
+- 教訓:スキーマエラーは「一時的な失敗」ではない。リトライする場合は、問題の結果を避けられるように
+  `limit`を小さくする・`order`や`publishedAfter`を変えるなど引数を変え、事前にユーザーに確認する。
